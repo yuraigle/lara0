@@ -1,0 +1,17 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./dist/Dockerfile
+    ports:
+      - '8081:80'
+      - '2221:22'
+      - '5173:5173'
+  db1:
+    image: mariadb:11.3
+    environment:
+      MARIADB_ROOT_PASSWORD: super!SECRET123
+    ports:
+      - '3316:3306'
+    volumes:
+      - ./dist/schema.sql:/docker-entrypoint-initdb.d/schema.sql
