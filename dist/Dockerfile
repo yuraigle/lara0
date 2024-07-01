@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,8 +9,8 @@ RUN apt update && apt install -y software-properties-common ca-certificates \
 RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 RUN apt update && apt install -y php8.3-fpm php8.3-mysql php8.3-xml php8.3-curl
 
-RUN mkdir /run/php
-RUN mkdir /run/sshd
+RUN mkdir -p /run/php
+RUN mkdir -p /run/sshd
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
@@ -28,7 +28,7 @@ COPY . ./
 COPY ./composer.json ./
 RUN composer install --optimize-autoloader --no-scripts
 
-php artisan config:clear
+RUN php artisan config:clear
 RUN php artisan key:generate
 RUN php artisan cache:clear
 RUN php artisan view:clear
@@ -38,7 +38,6 @@ RUN chmod -R 775 ./storage/logs ./storage/framework ./bootstrap/cache
 
 RUN npm install -g npm@latest
 RUN npm install
-
 RUN npm run build
 
 EXPOSE 80 22 5137
